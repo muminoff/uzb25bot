@@ -22,7 +22,8 @@ var twit = new twitter({
 });
 
 // API
-var subscribe = require('./lib/subscribe');
+var subscribe = require('./lib/user/subscribe');
+var unsubscribe = require('./lib/user/unsubscribe');
 
 bot.onText(/\/start/, function(msg, match) {
   var user = {
@@ -85,31 +86,16 @@ bot.onText(/\/stop/, function(msg, match) {
   var user = {
     id: msg.from.id,
   };
-  unsubscribe(pg, user);
-});
 
-function unsubscribe(pg, user) {
-  console.log(user);
-  pg.connect(db_url, function(err, client, done) {
-    if(err) {
-      console.error('Cannot connect to Postgres');
-      done();
-      process.exit(-1);
+  unsubscribe(client, user, function(ok) {
+    if(ok) {
+      console.info('User', user.id, 'unsubscribed');
+    } else {
+      console.info('Cannot unsubscribe user', user.id);
     }
-
-    client.query(
-      'UPDATE subscribers SET active=false WHERE id=$1',
-      [user.id],
-      function(err, result) {
-        if(err) {
-          console.error(err);
-          process.exit(-1);
-        }
-        done();
-    });
-
   });
-}
+
+});
 
 
 

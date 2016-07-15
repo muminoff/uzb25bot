@@ -4,9 +4,10 @@
   "description": "Realtime uzbek tweets",
   "main": "server.js",
   "dependencies": {
-    "node-telegram-bot-api": "^0.23.3",
-    "pg-native": "^1.10.0",
     "jsonfile": "^2.3.1",
+    "node-telegram-bot-api": "^0.23.3",
+    "pg": "^6.0.2",
+    "pg-native": "^1.10.0",
     "twit": "^2.2.4"
   },
   "devDependencies": {},
