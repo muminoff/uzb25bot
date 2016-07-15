@@ -5,7 +5,7 @@ var twitter = require('twit');
 var TelegramBot = require('node-telegram-bot-api');
 
 // Environment variables
-var postgres_url = process.env.DATABASE_URL || 'postgres://sardor@localhost/sardor';
+var postgres_url = process.env.DATABASE_URL;
 var telegram_token = process.env.TELEGRAM_TOKEN;
 
 // Instances
