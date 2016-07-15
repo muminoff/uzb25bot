@@ -139,7 +139,7 @@ bot.onText(/\/stat/, function(msg, match) {
     getStat(client, user, function(stat) {
       done();
       var message = util.format(
-          "Постлар сони: %d та.\nЭнг кўп пост ёзилаётган жой: %s.\nТелеграмда ботга обуна бўлганлар: %d та.",
+          "Жами постлар: %d та.\nЭнг кўп пост ёзилаётган жой: %s.\nОбуна бўлганлар: %d та.",
           stat.stat.total_posts,
           stat.stat.top_place,
           stat.stat.total_subscribers);
