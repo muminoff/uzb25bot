@@ -34,7 +34,7 @@ bot.onText(/\/start/, function(msg, match) {
     subscribed_at: new Date(msg.date * 1000)
   };
 
-  pg.connect(db_url, function(err, client, done) {
+  pg.connect(postgres_url, function(err, client, done) {
     if(err) {
       console.error('Cannot connect to Postgres');
       done();
@@ -56,7 +56,7 @@ bot.onText(/\/start/, function(msg, match) {
 
 function sendLastTweets(chat_id) {
   console.log(chat_id);
-  pg.connect(db_url, function(err, client, done) {
+  pg.connect(postgres_url, function(err, client, done) {
     if(err) {
       console.error('Cannot connect to Postgres');
       done();
@@ -114,7 +114,7 @@ stream.on('tweet', function(tweet) {
 });
 
 function saveTweet(pg, obj) {
-  pg.connect(db_url, function(err, client, done) {
+  pg.connect(postgres_url, function(err, client, done) {
     if(err) {
       console.error('Cannot connect to Postgres');
       done();
