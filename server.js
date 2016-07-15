@@ -60,6 +60,11 @@ bot.onText(/\/start/, function(msg, match) {
     getLastTweets(client, user, function(lastTweets) {
       console.info('Sending last 10 tweets to user', user.id);
       lastTweets.forEach(function (tweet) {
+        var message = util.format(
+            '%s (%s): %s',
+            tweet.screenname,
+            tweet.username,
+            tweet.text);
         bot.sendMessage(user.id, tweet.text);
       });
     });
