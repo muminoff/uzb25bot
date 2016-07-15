@@ -5,3 +5,5 @@ CREATE TABLE subscribers (
     active boolean DEFAULT true,
     subscribed_at timestamp without time zone
 );
+
+CREATE INDEX active_users_idx ON subscribers (active);
