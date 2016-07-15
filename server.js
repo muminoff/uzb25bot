@@ -29,6 +29,7 @@ var getLastTweets = require('./lib/tweets/getlasttweets');
 var saveTweet = require('./lib/tweets/savetweet');
 var getSubscribers = require('./lib/user/getsubscribers');
 var getStat = require('./lib/stat/getstat');
+var getRating = require('./lib/stat/getrating');
 
 // Telegram command /start
 bot.onText(/\/start/, function(msg, match) {
@@ -149,6 +150,41 @@ bot.onText(/\/stat/, function(msg, match) {
 
 });
 
+
+// Telegram command /rating
+bot.onText(/\/rating/, function(msg, match) {
+
+  var user = {
+    id: msg.from.id,
+  };
+
+  pg.connect(postgres_url, function(err, client, done) {
+    if(err) {
+      console.error('Cannot connect to Postgres (rating)');
+      console.error(err);
+      done();
+      process.exit(-1);
+    }
+
+    getRating(client, user, function(rating) {
+      done();
+
+      var message = "📊 Энг фаол иштирокчилар:\n\n";
+      rating.forEach(function (user) {
+        message += util.format(
+            "%s: %d та пост\n",
+            user.screenname,
+            user.times)
+      });
+
+      bot.sendMessage(user.id, message);
+
+    });
+
+  });
+
+});
+
 // Telegram command /about
 bot.onText(/\/about/, function(msg, match) {
 
@@ -156,7 +192,7 @@ bot.onText(/\/about/, function(msg, match) {
     id: msg.from.id,
   };
 
-  var message = "Муаллиф @crispybone\nЛойиҳа коди: https://github.com/muminoff/uzb25bot";
+  var message = "Муаллифлар: @crispybone, @Akhmatovich\nЛойиҳа коди: https://github.com/muminoff/uzb25bot";
   bot.sendMessage(user.id, message);
 
 });

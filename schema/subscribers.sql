@@ -5,4 +5,3 @@ CREATE TABLE subscribers (
     active boolean DEFAULT true,
     subscribed_at timestamp without time zone
 );
-
