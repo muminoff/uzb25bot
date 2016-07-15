@@ -99,7 +99,7 @@ bot.onText(/\/stop/, function(msg, match) {
 
 
 // Twitter stream
-var stream = twit.stream('statuses/filter', { track: 'uzb25' });
+var stream = twit.stream('statuses/filter', { track: 'uzb25,uzb,tashkent,mustaqillik,sardor' });
 stream.on('connected', function(response) {
   console.info('Twitter client connected to stream');
 });
@@ -138,8 +138,10 @@ stream.on('tweet', function(obj) {
 });
 
 
+// Postgres channel listener
 var pgClient = new pg.Client(postgres_url);
 pgClient.connect(function(err) {
+
   if(err) {
     console.error('Cannot connect to Postgres (pubsub)');
     console.error(err);
@@ -147,15 +149,46 @@ pgClient.connect(function(err) {
   }
   
   pgClient.query('LISTEN channel', function(err, result) {
+
     if(err) {
       console.error('Cannot listen to channel');
       process.exit(-1);
     }
+
     console.info('Postgres channel listener started');
+
   });
 
   pgClient.on('notification', function(data) {
+
     var tweetData = JSON.parse(data.payload);
-    console.log(tweetData.id);
+    console.log('Got tweet', tweetData.id, 'now broadcasting');
+    broadcastTweet(tweetData);
+
   });
 });
+
+
+function broadcastTweet(tweet) {
+
+  pg.connect(postgres_url, function(err, client, done) {
+
+    if(err) {
+      console.error('Cannot connect to Postgres (broadcast)');
+      console.error(err);
+      done();
+      process.exit(-1);
+    }
+
+    console.info('Broadcasting tweet', tweet.id, 'to subscribers');
+    getSubscribers(client, function(subscribers) {
+      done();
+      subscribers.forEach(function (subscriber) {
+        console.log('Sending to subscriber ->', subscriber.id);
+        bot.sendMessage(subscriber['id'], tweet.text);
+      });
+    })
+
+  });
+
+}
