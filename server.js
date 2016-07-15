@@ -25,6 +25,7 @@ var twit = new twitter({
 var subscribe = require('./lib/user/subscribe');
 var unsubscribe = require('./lib/user/unsubscribe');
 var getLastTweets = require('./lib/tweets/getlasttweets');
+var saveTweet = require('./lib/tweets/savetweet');
 
 // Telegram command /start
 bot.onText(/\/start/, function(msg, match) {
@@ -66,6 +67,7 @@ bot.onText(/\/start/, function(msg, match) {
 
 });
 
+// Telegram command /stop
 bot.onText(/\/stop/, function(msg, match) {
   var user = {
     id: msg.from.id,
@@ -95,46 +97,45 @@ bot.onText(/\/stop/, function(msg, match) {
 });
 
 
-
+// Twitter stream
 var stream = twit.stream('statuses/filter', { track: 'uzb25' });
 stream.on('connected', function(response) {
   console.info('Twitter client connected to stream');
 });
-stream.on('tweet', function(tweet) {
-  var obj = {
-    id: tweet.id,
-    text: tweet.text,
-    username: tweet.user.name,
-    screenname: tweet.user.screen_name,
-    location: tweet.user.location,
-    avatar: tweet.user.profile_image_url,
-    created_at: new Date(tweet.created_at)
+stream.on('tweet', function(obj) {
+  var tweet = {
+    id: obj.id,
+    text: obj.text,
+    username: obj.user.name,
+    screenname: obj.user.screen_name,
+    location: obj.user.location,
+    avatar: obj.user.profile_image_url,
+    created_at: new Date(obj.created_at)
   };
-  saveTweet(pg, obj);
-});
 
-function saveTweet(pg, obj) {
   pg.connect(postgres_url, function(err, client, done) {
     if(err) {
-      console.error('Cannot connect to Postgres (filter)');
+      console.error('Cannot connect to Postgres (subscribe)');
       console.error(err);
       done();
       process.exit(-1);
     }
 
-    client.query(
-      'INSERT INTO tweets (id, text, username, screenname, location, avatar, created_at) VALUES($1, $2, $3, $4, $5, $6, $7)',
-      [obj.id, obj.text, obj.username, obj.screenname, obj.location, obj.avatar, obj.created_at],
-      function(err, result) {
-        if(err) {
-          console.error(err);
-          process.exit(-1);
-        }
-        done();
+    saveTweet(client, tweet, function(ok) {
+      done();
+      if(ok) {
+        console.info('Tweet', tweet.id, 'saved');
+      } else {
+        console.info('Cannot save tweet', tweet.id);
+      }
+
     });
 
   });
-}
+
+
+});
+
 
 var pgClient = new pg.Client(postgres_url);
 pgClient.connect(function(err) {
