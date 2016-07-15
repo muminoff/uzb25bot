@@ -37,7 +37,7 @@ bot.onText(/\/start/, function(msg, match) {
 
   pg.connect(postgres_url, function(err, client, done) {
     if(err) {
-      console.error('Cannot connect to Postgres (initial)');
+      console.error('Cannot connect to Postgres (subscribe)');
       console.error(err);
       done();
       process.exit(-1);
@@ -90,12 +90,22 @@ bot.onText(/\/stop/, function(msg, match) {
     id: msg.from.id,
   };
 
-  unsubscribe(client, user, function(ok) {
-    if(ok) {
-      console.info('User', user.id, 'unsubscribed');
-    } else {
-      console.info('Cannot unsubscribe user', user.id);
+  pg.connect(postgres_url, function(err, client, done) {
+    if(err) {
+      console.error('Cannot connect to Postgres (unsubscribe)');
+      console.error(err);
+      done();
+      process.exit(-1);
     }
+
+    unsubscribe(client, user, function(ok) {
+      if(ok) {
+        console.info('User', user.id, 'unsubscribed');
+      } else {
+        console.info('Cannot unsubscribe user', user.id);
+      }
+    });
+
   });
 
 });
