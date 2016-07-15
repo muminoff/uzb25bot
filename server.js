@@ -37,7 +37,8 @@ bot.onText(/\/start/, function(msg, match) {
 
   pg.connect(postgres_url, function(err, client, done) {
     if(err) {
-      console.error('Cannot connect to Postgres');
+      console.error('Cannot connect to Postgres (initial)');
+      console.error(err);
       done();
       process.exit(-1);
     }
