@@ -97,6 +97,46 @@ bot.onText(/\/stop/, function(msg, match) {
 
 });
 
+// Telegram command /info
+bot.onText(/\/info/, function(msg, match) {
+  var user = {
+    id: msg.from.id,
+    username: msg.from.username,
+    first_name: msg.from.first_name,
+    active: true,
+    subscribed_at: new Date(msg.date * 1000)
+  };
+
+  pg.connect(postgres_url, function(err, client, done) {
+    if(err) {
+      console.error('Cannot connect to Postgres (subscribe)');
+      console.error(err);
+      done();
+      process.exit(-1);
+    }
+
+    subscribe(client, user, function(ok) {
+      done();
+      if(ok) {
+        console.info('User', user.id, 'subscribed');
+        var message = 'Сиз обуна бўлдингиз. Обунани бекор қилиш учун исталган вақтда /stop буйруғини юборишингиз мумкин.';
+        bot.sendMessage(user.id, message);
+      } else {
+        console.info('Cannot subscribe user', user.id);
+      }
+    });
+
+    getLastTweets(client, user, function(lastTweets) {
+      console.info('Sending last 10 tweets to user', user.id);
+      lastTweets.forEach(function (tweet) {
+        bot.sendMessage(user.id, tweet.text);
+      });
+    });
+
+  });
+
+});
+
 
 // Twitter stream
 var stream = twit.stream('statuses/filter', { track: 'uzb25,uzb,tashkent,mustaqillik,sardor' });
@@ -185,7 +225,12 @@ function broadcastTweet(tweet) {
       done();
       subscribers.forEach(function (subscriber) {
         console.log('Sending to subscriber ->', subscriber.id);
-        bot.sendMessage(subscriber['id'], tweet.text);
+        var message = util.format(
+            '%s (%s): %s',
+            tweet.screenname,
+            tweet.username,
+            tweet.text);
+        bot.sendMessage(subscriber['id'], message);
       });
     })
 
