@@ -1,5 +1,5 @@
 CREATE TABLE subscribers (
-    id bigint NOT NULL,
+    id bigint PRIMARY KEY,
     username text,
     first_name text,
     active boolean DEFAULT true,
