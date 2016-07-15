@@ -3,6 +3,9 @@
 
 Телеграм бот: [@Uzb25Bot](https://telegram.me/Uzb25Bot)
 
+![alt text](./screenshot1.jpg "Screenshot")
+![alt text](./screenshot2.jpg "Screenshot")
+
 # Ўрнатиш тартиби
 Ушбу буйруқларни кетма-кетликда ишга туширинг.
 
