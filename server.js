@@ -26,6 +26,7 @@ var subscribe = require('./lib/user/subscribe');
 var unsubscribe = require('./lib/user/unsubscribe');
 var getLastTweets = require('./lib/tweets/getlasttweets');
 var saveTweet = require('./lib/tweets/savetweet');
+var getSubscribers = require('./lib/user/getsubscribers');
 
 // Telegram command /start
 bot.onText(/\/start/, function(msg, match) {
