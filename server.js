@@ -1,11 +1,25 @@
+// Main dependencies
 const util = require('util');
 var pg = require('pg').native;
 var twitter = require('twit');
-var db_url = 'postgres://sardor@localhost/sardor';
-
 var TelegramBot = require('node-telegram-bot-api');
-var token = '256368416:AAFtbvYZIU8wfWPlgzoXmQV-s4dIF-_S9JY';
-var bot = new TelegramBot(token, {polling: true});
+
+// Environment variables
+var postgres_url = process.env.DATABASE_URL || 'postgres://sardor@localhost/sardor';
+var telegram_token = process.env.TELEGRAM_TOKEN;
+
+// Instances
+var bot = new TelegramBot(
+  telegram_token,
+  {polling: true}
+);
+
+var twit = new twitter({
+  consumer_key: process.env.TWITTER_CONSUMER_KEY,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
+  access_token: process.env.TWITTER_ACCESS_TOKEN_KEY,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+});
 
 // API
 var subscribe = require('./lib/subscribe');
@@ -96,13 +110,6 @@ function unsubscribe(pg, user) {
 
   });
 }
-
-var twit = new twitter({
-  consumer_key: 'Tvx1WrOxvsHYz56fboflsLgjK',
-  consumer_secret: 'FMm6crsw2t4pvnznUYKEGuZOAZgFs5eZt1J7v0a3tu42P1vWac',
-  access_token: '27643060-1c9yeC2tnf5P35quVSciEepHOaBfzYuqcQFHD6Rw4',
-  access_token_secret: 'baH9aDaKCxNzj4Hh9cIt8O93uCH8mTMd9O7tXH4bwZQa9'
-});
 
 
 
