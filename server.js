@@ -63,8 +63,8 @@ bot.onText(/\/start/, function(msg, match) {
       lastTweets.forEach(function (tweet) {
         var message = util.format(
             '%s (%s): %s',
-            tweet.screenname,
             tweet.username,
+            tweet.screenname,
             tweet.text);
         bot.sendMessage(user.id, message);
       });
@@ -132,13 +132,6 @@ bot.onText(/\/info/, function(msg, match) {
       } else {
         console.info('Cannot subscribe user', user.id);
       }
-    });
-
-    getLastTweets(client, user, function(lastTweets) {
-      console.info('Sending last 10 tweets to user', user.id);
-      lastTweets.forEach(function (tweet) {
-        bot.sendMessage(user.id, tweet.text);
-      });
     });
 
   });
@@ -235,8 +228,8 @@ function broadcastTweet(tweet) {
         console.log('Sending to subscriber ->', subscriber.id);
         var message = util.format(
             '%s (%s): %s',
-            tweet.screenname,
             tweet.username,
+            tweet.screenname,
             tweet.text);
         bot.sendMessage(subscriber['id'], message);
       });
