@@ -65,7 +65,7 @@ bot.onText(/\/start/, function(msg, match) {
             tweet.screenname,
             tweet.username,
             tweet.text);
-        bot.sendMessage(user.id, tweet.text);
+        bot.sendMessage(user.id, message);
       });
     });
 
