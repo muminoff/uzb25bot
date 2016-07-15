@@ -1,6 +1,9 @@
 {
   "name": "uzb25bot",
   "version": "1.0.0",
+  "engines": {
+    "node": "6.0"
+  },
   "description": "Realtime uzbek tweets",
   "main": "server.js",
   "dependencies": {
