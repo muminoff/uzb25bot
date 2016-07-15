@@ -60,7 +60,8 @@ function sendLastTweets(chat_id) {
   console.log(chat_id);
   pg.connect(postgres_url, function(err, client, done) {
     if(err) {
-      console.error('Cannot connect to Postgres');
+      console.error('Cannot connect to Postgres (sendLastTweets)');
+      console.error(err);
       done();
       process.exit(-1);
     }
@@ -101,7 +102,7 @@ bot.onText(/\/stop/, function(msg, match) {
 
 
 
-var stream = twit.stream('statuses/filter', { track: 'sardor' });
+var stream = twit.stream('statuses/filter', { track: 'uzb25' });
 stream.on('tweet', function(tweet) {
   var obj = {
     id: tweet.id,
@@ -118,7 +119,8 @@ stream.on('tweet', function(tweet) {
 function saveTweet(pg, obj) {
   pg.connect(postgres_url, function(err, client, done) {
     if(err) {
-      console.error('Cannot connect to Postgres');
+      console.error('Cannot connect to Postgres (filter)');
+      console.error(err);
       done();
       process.exit(-1);
     }
@@ -137,10 +139,11 @@ function saveTweet(pg, obj) {
   });
 }
 
-var pgClient = new pg.Client('postgres://sardor@localhost/sardor');
+var pgClient = new pg.Client(postgres_url);
 pgClient.connect(function(err) {
   if(err) {
-    console.error('Cannot connect to Postgres');
+    console.error('Cannot connect to Postgres (pubsub)');
+    console.error(err);
     process.exit(-1);
   }
   
