@@ -7,7 +7,7 @@ var TelegramBot = require('node-telegram-bot-api');
 // Environment variables
 var postgres_url = process.env.DATABASE_URL;
 var telegram_token = process.env.TELEGRAM_TOKEN;
-var hashtags = process.env.HASHTAGS || '#uzb25, #mustaqillik, #dilizhori';
+var hashtags = process.env.HASHTAGS || 'uzb25, mustaqillik, dilizhori';
 
 // Instances
 var bot = new TelegramBot(
