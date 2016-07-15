@@ -7,6 +7,7 @@ var TelegramBot = require('node-telegram-bot-api');
 // Environment variables
 var postgres_url = process.env.DATABASE_URL;
 var telegram_token = process.env.TELEGRAM_TOKEN;
+var hashtags = process.env.HASHTAGS || 'uzb25,uzb,mustaqillik,dilizhori';
 
 // Instances
 var bot = new TelegramBot(
@@ -91,7 +92,9 @@ bot.onText(/\/stop/, function(msg, match) {
       done();
       if(ok) {
         console.info('User', user.id, 'unsubscribed');
-        var message = 'Обуна бекор қилинди. Қайта обуна бўлиш учун /start буйруғини юборинг.';
+        var message = util.format(
+            'Ушбу бот Twitter ва Instagram да ёзилаётган постларни бир жойга йиғиб, реал вақтда кўришга ёрдам бериш учун яратилди. Бот ҳозирда интернетда чоп этилаётган қуйидаги хештегларни доим кузатиб бормоқда: \n%s',
+            process.env.hashtags);
         bot.sendMessage(user.id, message);
       } else {
         console.info('Cannot unsubscribe user', user.id);
@@ -144,7 +147,7 @@ bot.onText(/\/info/, function(msg, match) {
 
 
 // Twitter stream
-var stream = twit.stream('statuses/filter', { track: 'uzb25,uzb,tashkent,mustaqillik,sardor' });
+var stream = twit.stream('statuses/filter', { track: hashtags });
 stream.on('connected', function(response) {
   console.info('Twitter client connected to stream');
 });
