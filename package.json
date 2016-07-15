@@ -1,0 +1,31 @@
+{
+  "name": "uzb25bot",
+  "version": "1.0.0",
+  "description": "Realtime uzbek tweets",
+  "main": "server.js",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.23.3",
+    "pg-native": "^1.10.0",
+    "jsonfile": "^2.3.1",
+    "twit": "^2.2.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "npm test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/muminoff/uzb25bot.git"
+  },
+  "keywords": [
+    "uzbek",
+    "tweets"
+  ],
+  "author": "muminoff",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/muminoff/uzb25bot/issues"
+  },
+  "homepage": "https://github.com/muminoff/uzb25bot#readme"
+}
