@@ -156,7 +156,7 @@ bot.onText(/\/about/, function(msg, match) {
     id: msg.from.id,
   };
 
-  var message = "Муаллиф @crispybone.";
+  var message = "Муаллиф @crispybone\nЛойиҳа коди: https://github.com/muminoff/uzb25bot";
   bot.sendMessage(user.id, message);
 
 });
