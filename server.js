@@ -46,6 +46,8 @@ bot.onText(/\/start/, function(msg, match) {
     subscribe(client, user, function(ok) {
       if(ok) {
         console.info('User', user.id, 'subscribed');
+        var message = 'Сиз обуна бўлдингиз. Обунани бекор қилиш учун исталган вақтда /stop буйруғини юборишингиз мумкин.';
+        bot.sendMessage(user.id, message);
       } else {
         console.info('Cannot subscribe user', user.id);
       }
@@ -101,6 +103,8 @@ bot.onText(/\/stop/, function(msg, match) {
     unsubscribe(client, user, function(ok) {
       if(ok) {
         console.info('User', user.id, 'unsubscribed');
+        var message = 'Обуна бекор қилинди. Қайта обуна бўлиш учун /start буйруғини юборинг.';
+        bot.sendMessage(user.id, message);
       } else {
         console.info('Cannot unsubscribe user', user.id);
       }
