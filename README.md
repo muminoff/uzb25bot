@@ -8,13 +8,13 @@
 
 1. `brew install node`
 2. `git clone https://github.com/muminoff/uzb25bot`
-3. `npm install`
+3. `cd uzb25 && npm install`
 4. `createuser -s uzb25`
 5. `createdb -O uzb25 uzb25`
 6. `psql -U uzb25 < schema/subscribers.sql`
 7. `psql -U uzb25 < schema/functions.sql`
 8. `psql -U uzb25 < schema/tweets.sql`
-9. `EXPORT DATABASE_URL="postgres://uzb25@localhost/uzb25`
+9. `EXPORT DATABASE_URL="postgres://uzb25@localhost/uzb25"`
 10. `EXPORT TELEGRAM_TOKEN="__telegram_token__"`
 11. `EXPORT TWITTER_CONSUMER_KEY="__twitter_consumer_key__"`
 12. `EXPORT TWITTER_CONSUMER_SECRET="__twitter_consumer_secret__"`
