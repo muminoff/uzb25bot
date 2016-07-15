@@ -7,7 +7,7 @@ var TelegramBot = require('node-telegram-bot-api');
 // Environment variables
 var postgres_url = process.env.DATABASE_URL;
 var telegram_token = process.env.TELEGRAM_TOKEN;
-var hashtags = process.env.HASHTAGS || 'uzb25,uzb,mustaqillik,dilizhori';
+var hashtags = process.env.HASHTAGS || 'uzb25, mustaqillik, dilizhori';
 
 // Instances
 var bot = new TelegramBot(
@@ -28,6 +28,7 @@ var unsubscribe = require('./lib/user/unsubscribe');
 var getLastTweets = require('./lib/tweets/getlasttweets');
 var saveTweet = require('./lib/tweets/savetweet');
 var getSubscribers = require('./lib/user/getsubscribers');
+var getStat = require('./lib/stat/getstat');
 
 // Telegram command /start
 bot.onText(/\/start/, function(msg, match) {
@@ -103,38 +104,60 @@ bot.onText(/\/stop/, function(msg, match) {
 
 });
 
+
 // Telegram command /info
 bot.onText(/\/info/, function(msg, match) {
+
   var user = {
     id: msg.from.id,
-    username: msg.from.username,
-    first_name: msg.from.first_name,
-    active: true,
-    subscribed_at: new Date(msg.date * 1000)
+  };
+
+  var message = util.format(
+      "Ушбу бот Twitter ва Instagram да ёзилаётган постларни бир жойда реал вақтда кўриш учун яратилди. Бот ҳозирда интернетда чоп этилаётган қуйидаги хештегларни доим кузатиб бормоқда.\n\n%s",
+      hashtags);
+  bot.sendMessage(user.id, message);
+
+});
+
+
+// Telegram command /stat
+bot.onText(/\/stat/, function(msg, match) {
+
+  var user = {
+    id: msg.from.id,
   };
 
   pg.connect(postgres_url, function(err, client, done) {
     if(err) {
-      console.error('Cannot connect to Postgres (subscribe)');
+      console.error('Cannot connect to Postgres (stat)');
       console.error(err);
       done();
       process.exit(-1);
     }
 
-    subscribe(client, user, function(ok) {
+    getStat(client, user, function(stat) {
       done();
-      if(ok) {
-        console.info('User', user.id, 'subscribed');
-        var message = util.format(
-            'Ушбу бот Twitter ва Instagram да ёзилаётган постларни бир жойга йиғиб, реал вақтда кўришга ёрдам бериш учун яратилди. Бот ҳозирда интернетда чоп этилаётган қуйидаги хештегларни доим кузатиб бормоқда: \n%s',
-            hashtags);
-        bot.sendMessage(user.id, message);
-      } else {
-        console.info('Cannot subscribe user', user.id);
-      }
+      var message = util.format(
+          "Постлар сони: %d та.\nЭнг кўп пост ёзилаётган жой: %s\nТелеграмда ботга обуна бўлганлар: %d та.",
+          stat.stat.total_posts,
+          stat.stat.top_place,
+          stat.stat.total_subscribers);
+      bot.sendMessage(user.id, message);
     });
 
   });
+
+});
+
+// Telegram command /about
+bot.onText(/\/about/, function(msg, match) {
+
+  var user = {
+    id: msg.from.id,
+  };
+
+  var message = "Муаллиф @crispybone.";
+  bot.sendMessage(user.id, message);
 
 });
 
