@@ -5,7 +5,6 @@ var twitter = require('twit');
 var TelegramBot = require('node-telegram-bot-api');
 
 // Environment variables
-console.log('DATABASE_URL ->', process.env.DATABASE_URL);
 var postgres_url = process.env.DATABASE_URL;
 var telegram_token = process.env.TELEGRAM_TOKEN;
 
@@ -25,7 +24,9 @@ var twit = new twitter({
 // API
 var subscribe = require('./lib/user/subscribe');
 var unsubscribe = require('./lib/user/unsubscribe');
+var getLastTweets = require('./lib/tweets/getlasttweets');
 
+// Telegram command /start
 bot.onText(/\/start/, function(msg, match) {
   var user = {
     id: msg.from.id,
@@ -44,6 +45,7 @@ bot.onText(/\/start/, function(msg, match) {
     }
 
     subscribe(client, user, function(ok) {
+      done();
       if(ok) {
         console.info('User', user.id, 'subscribed');
         var message = 'Сиз обуна бўлдингиз. Обунани бекор қилиш учун исталган вақтда /stop буйруғини юборишингиз мумкин.';
@@ -53,39 +55,16 @@ bot.onText(/\/start/, function(msg, match) {
       }
     });
 
-  });
-
-});
-
-
-function sendLastTweets(chat_id) {
-  console.log(chat_id);
-  pg.connect(postgres_url, function(err, client, done) {
-    if(err) {
-      console.error('Cannot connect to Postgres (sendLastTweets)');
-      console.error(err);
-      done();
-      process.exit(-1);
-    }
-
-    client.query(
-      'SELECT id, text, username, screenname, location, avatar, created_at FROM tweets ORDER by created_at DESC LIMIT 10',
-      [],
-      function(err, result) {
-        if(err) {
-          console.error(err);
-          process.exit(-1);
-        }
-        done();
-        result.rows.forEach(function(row) {
-          var message = util.format(
-              '%s (%s): %s', row.username, row.screenname, row.text);
-          bot.sendMessage(chat_id, message);
-        });
+    getLastTweets(client, user, function(lastTweets) {
+      console.info('Sending last 10 tweets to user', user.id);
+      lastTweets.forEach(function (tweet) {
+        bot.sendMessage(user.id, tweet.text);
+      });
     });
 
   });
-}
+
+});
 
 bot.onText(/\/stop/, function(msg, match) {
   var user = {
@@ -101,6 +80,7 @@ bot.onText(/\/stop/, function(msg, match) {
     }
 
     unsubscribe(client, user, function(ok) {
+      done();
       if(ok) {
         console.info('User', user.id, 'unsubscribed');
         var message = 'Обуна бекор қилинди. Қайта обуна бўлиш учун /start буйруғини юборинг.';
@@ -117,6 +97,9 @@ bot.onText(/\/stop/, function(msg, match) {
 
 
 var stream = twit.stream('statuses/filter', { track: 'uzb25' });
+stream.on('connected', function(response) {
+  console.info('Twitter client connected to stream');
+});
 stream.on('tweet', function(tweet) {
   var obj = {
     id: tweet.id,
@@ -166,7 +149,7 @@ pgClient.connect(function(err) {
       console.error('Cannot listen to channel');
       process.exit(-1);
     }
-    console.info('Channel listener started');
+    console.info('Postgres channel listener started');
   });
 
   pgClient.on('notification', function(data) {
