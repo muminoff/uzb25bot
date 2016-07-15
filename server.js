@@ -92,9 +92,7 @@ bot.onText(/\/stop/, function(msg, match) {
       done();
       if(ok) {
         console.info('User', user.id, 'unsubscribed');
-        var message = util.format(
-            'Ушбу бот Twitter ва Instagram да ёзилаётган постларни бир жойга йиғиб, реал вақтда кўришга ёрдам бериш учун яратилди. Бот ҳозирда интернетда чоп этилаётган қуйидаги хештегларни доим кузатиб бормоқда: \n%s',
-            process.env.hashtags);
+        var message = 'Обуна бекор қилинди. Қайта обуна бўлиш учун /start ни юборишингиз мумкин.';
         bot.sendMessage(user.id, message);
       } else {
         console.info('Cannot unsubscribe user', user.id);
@@ -127,7 +125,9 @@ bot.onText(/\/info/, function(msg, match) {
       done();
       if(ok) {
         console.info('User', user.id, 'subscribed');
-        var message = 'Сиз обуна бўлдингиз. Обунани бекор қилиш учун исталган вақтда /stop буйруғини юборишингиз мумкин.';
+        var message = util.format(
+            'Ушбу бот Twitter ва Instagram да ёзилаётган постларни бир жойга йиғиб, реал вақтда кўришга ёрдам бериш учун яратилди. Бот ҳозирда интернетда чоп этилаётган қуйидаги хештегларни доим кузатиб бормоқда: \n%s',
+            hashtags);
         bot.sendMessage(user.id, message);
       } else {
         console.info('Cannot subscribe user', user.id);
