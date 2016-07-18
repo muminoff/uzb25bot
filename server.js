@@ -165,15 +165,20 @@ bot.onText(/\/rating/, function(msg, match) {
       process.exit(-1);
     }
 
-    getRating(client, user, function(rating) {
+    getRating(client, user, function(ratings) {
       done();
 
-      var message = "📊 Энг фаол иштирокчилар:\n\n";
-      rating.forEach(function (user) {
-        message += util.format(
-            "%s: %d та пост\n",
-            user.screenname,
-            user.times)
+      var message = "📊 Рейтинг\n\n";
+      message += "Энг фаол иштирокчилар:\n";
+      ratings.forEach(function(rating) {
+        rating.user_rating.forEach(function (user, i) {
+          message += util.format(
+              "%d. %s (%s): %d\n",
+              i+1,
+              user.username,
+              user.screenname,
+              user.posts);
+        });
       });
 
       bot.sendMessage(user.id, message);
@@ -295,7 +300,6 @@ function broadcastTweet(tweet) {
           console.error(err);
         }
       });
-      io.sockets.emit('tweet', tweet);
     })
 
   });
