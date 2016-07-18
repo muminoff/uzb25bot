@@ -17,12 +17,12 @@
 6. `psql -U uzb25 < schema/subscribers.sql`
 7. `psql -U uzb25 < schema/functions.sql`
 8. `psql -U uzb25 < schema/tweets.sql`
-9. `EXPORT DATABASE_URL="postgres://uzb25@localhost/uzb25"`
-10. `EXPORT TELEGRAM_TOKEN="__telegram_token__"`
-11. `EXPORT TWITTER_CONSUMER_KEY="__twitter_consumer_key__"`
-12. `EXPORT TWITTER_CONSUMER_SECRET="__twitter_consumer_secret__"`
-13. `EXPORT TWITTER_ACCESS_TOKEN_KEY="__twitter_access_token_key__"`
-14. `EXPORT TWITTER_ACCESS_TOKEN_SECRET="__twitter_access_token_secret__"`
+9. `export DATABASE_URL="postgres://uzb25@localhost/uzb25"`
+10. `export TELEGRAM_TOKEN="__telegram_token__"`
+11. `export TWITTER_CONSUMER_KEY="__twitter_consumer_key__"`
+12. `export TWITTER_CONSUMER_SECRET="__twitter_consumer_secret__"`
+13. `export TWITTER_ACCESS_TOKEN_KEY="__twitter_access_token_key__"`
+14. `export TWITTER_ACCESS_TOKEN_SECRET="__twitter_access_token_secret__"`
 15. `npm start`
 
 # Лицензия
