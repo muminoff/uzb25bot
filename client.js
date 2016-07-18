@@ -1,4 +1,4 @@
-var socket = require('socket.io-client')('http://localhost:5000');
+var socket = require('socket.io-client')('http://uzb25bot.herokuapp.com');
 socket.on('connect', function() {
   console.log('connected');
 });
