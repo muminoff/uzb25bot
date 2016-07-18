@@ -1,5 +1,10 @@
 // Main dependencies
 const util = require('util');
+var express = require('express');
+var app = express();
+var server = require('http').createServer(app);
+var bodyParser = require('body-parser');
+var io = require('socket.io')(server);
 var pg = require('pg').native;
 var twitter = require('twit');
 var TelegramBot = require('node-telegram-bot-api');
@@ -139,7 +144,7 @@ bot.onText(/\/stat/, function(msg, match) {
     getStat(client, user, function(stat) {
       done();
       var message = util.format(
-          "Жами постлар: %d та.\nЭнг кўп пост ёзилаётган жой: %s.\nОбуна бўлганлар: %d та.",
+          "Жами постлар: %d та.\nОбуна бўлганлар: %d та.",
           stat.stat.total_posts,
           stat.stat.top_place,
           stat.stat.total_subscribers);
@@ -290,10 +295,25 @@ function broadcastTweet(tweet) {
             tweet.username,
             tweet.screenname,
             tweet.text);
-        bot.sendMessage(subscriber['id'], message);
+        try {
+          bot.sendMessage(subscriber['id'], message);
+        } catch (err) {
+          console.error(err);
+        }
       });
+      io.sockets.emit('tweet', tweet);
     })
 
   });
 
 }
+
+io.sockets.on('connection', function(socket) {
+  var remote_addr = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+  console.log('Socket connected', socket.id);
+  console.log('Socket address', remote_addr);
+});
+
+server.listen(process.env.PORT, function() {
+  console.log('Socket.io server started');
+});
