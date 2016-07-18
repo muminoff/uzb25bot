@@ -8,6 +8,9 @@ CREATE TABLE tweets (
     created_at timestamp without time zone
 );
 
+CREATE INDEX usernames_idx ON tweets (username, screenname);
+CREATE INDEX locations_idx ON tweets (location);
+
 CREATE TRIGGER trig_new_tweet AFTER INSERT ON tweets FOR EACH ROW EXECUTE PROCEDURE new_tweet_notify();
 
 CREATE VIEW last_tweets AS
