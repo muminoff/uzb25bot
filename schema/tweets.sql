@@ -9,3 +9,6 @@ CREATE TABLE tweets (
 );
 
 CREATE TRIGGER trig_new_tweet AFTER INSERT ON tweets FOR EACH ROW EXECUTE PROCEDURE new_tweet_notify();
+
+CREATE VIEW last_tweets AS
+SELECT id, text, username, screenname, location, avatar, created_at FROM tweets, pg_sleep(2) ORDER by created_at DESC LIMIT 10;
