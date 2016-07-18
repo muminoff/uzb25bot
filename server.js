@@ -146,7 +146,6 @@ bot.onText(/\/stat/, function(msg, match) {
       var message = util.format(
           "Жами постлар: %d та.\nОбуна бўлганлар: %d та.",
           stat.stat.total_posts,
-          stat.stat.top_place,
           stat.stat.total_subscribers);
       bot.sendMessage(user.id, message);
     });
