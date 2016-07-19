@@ -182,6 +182,17 @@ bot.onText(/\/rating/, function(msg, match) {
         });
       });
 
+      message += "\n\nЭнг фаол ҳудудлар:\n";
+      ratings.forEach(function(rating) {
+        rating.location_rating.forEach(function (location, i) {
+          message += util.format(
+              "%d. %s: %d\n",
+              i+1,
+              location.location,
+              location.posts);
+        });
+      });
+
       bot.sendMessage(user.id, message);
 
     });
