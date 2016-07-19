@@ -139,7 +139,8 @@ bot.onText(/\/stat/, function(msg, match) {
 
     getStat(client, user, function(stat) {
       done();
-      var message = util.format(
+      var message = "📈 Статистика\n\n";
+          message += util.format(
           "Жами постлар: %d та.\nОбуна бўлганлар: %d та.",
           stat.stat.total_posts,
           stat.stat.total_subscribers);
