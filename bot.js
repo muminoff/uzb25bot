@@ -141,9 +141,11 @@ bot.onText(/\/stat/, function(msg, match) {
       done();
       var message = "📈 Статистика\n\n";
           message += util.format(
-          "Жами постлар: %d та.\nОбуна бўлганлар: %d та.",
+          "Жами постлар: %d та.\nОбуна бўлганлар: %d та.\nБир кунда ёзилган постлар (ўртача): %d та.\nБир кунда обуна бўлганлар (ўртача): %d та.",
           stat.stat.total_posts,
-          stat.stat.total_subscribers);
+          stat.stat.total_subscribers,
+          stat.stat.avg_posts_per_day,
+          stat.stat.avg_subscribers_per_day);
       bot.sendMessage(user.id, message);
     });
 
