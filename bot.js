@@ -12,7 +12,9 @@ var hashtags = process.env.HASHTAGS || 'uzb25, mustaqillik, dilizhori';
 // Instances
 var bot = new TelegramBot(
   telegram_token,
-  {polling: true}
+  {
+    polling: true
+  }
 );
 
 var twit = new twitter({
@@ -42,7 +44,7 @@ bot.onText(/\/start/, function(msg, match) {
   };
 
   pg.connect(postgres_url, function(err, client, done) {
-    if(err) {
+    if (err) {
       console.error('Cannot connect to Postgres (subscribe)');
       console.error(err);
       done();
@@ -51,7 +53,7 @@ bot.onText(/\/start/, function(msg, match) {
 
     subscribe(client, user, function(ok) {
       done();
-      if(ok) {
+      if (ok) {
         console.info('User', user.id, 'subscribed');
         var message = 'Сиз обуна бўлдингиз. Обунани бекор қилиш учун исталган вақтда /stop буйруғини юборишингиз мумкин.';
         bot.sendMessage(user.id, message);
@@ -63,12 +65,12 @@ bot.onText(/\/start/, function(msg, match) {
     getLastTweets(client, user, function(lastTweets) {
       done();
       console.info('Sending last 10 tweets to user', user.id);
-      lastTweets.forEach(function (tweet) {
+      lastTweets.forEach(function(tweet) {
         var message = util.format(
-            '%s (%s): %s',
-            tweet.username,
-            tweet.screenname,
-            tweet.text);
+          '%s (%s): %s',
+          tweet.username,
+          tweet.screenname,
+          tweet.text);
         bot.sendMessage(user.id, message);
       });
     });
@@ -84,7 +86,7 @@ bot.onText(/\/stop/, function(msg, match) {
   };
 
   pg.connect(postgres_url, function(err, client, done) {
-    if(err) {
+    if (err) {
       console.error('Cannot connect to Postgres (unsubscribe)');
       console.error(err);
       done();
@@ -93,7 +95,7 @@ bot.onText(/\/stop/, function(msg, match) {
 
     unsubscribe(client, user, function(ok) {
       done();
-      if(ok) {
+      if (ok) {
         console.info('User', user.id, 'unsubscribed');
         var message = 'Обуна бекор қилинди. Қайта обуна бўлиш учун /start ни юборишингиз мумкин.';
         bot.sendMessage(user.id, message);
@@ -115,8 +117,8 @@ bot.onText(/\/info/, function(msg, match) {
   };
 
   var message = util.format(
-      "Ушбу бот Twitter да ёзилаётган постларни бир жойда реал вақтда кўриш учун яратилди. Бот ҳозирда интернетда чоп этилаётган қуйидаги хештегларни доим кузатиб бормоқда.\n\n%s",
-      hashtags);
+    "Ушбу бот Twitter да ёзилаётган постларни бир жойда реал вақтда кўриш учун яратилди. Бот ҳозирда интернетда чоп этилаётган қуйидаги хештегларни доим кузатиб бормоқда.\n\n%s",
+    hashtags);
   bot.sendMessage(user.id, message);
 
 });
@@ -130,7 +132,7 @@ bot.onText(/\/stat/, function(msg, match) {
   };
 
   pg.connect(postgres_url, function(err, client, done) {
-    if(err) {
+    if (err) {
       console.error('Cannot connect to Postgres (stat)');
       console.error(err);
       done();
@@ -140,13 +142,13 @@ bot.onText(/\/stat/, function(msg, match) {
     getStat(client, user, function(stat) {
       done();
       var message = "📈 Статистика\n\n";
-          message += util.format(
-          "Ёзилган постлар (жами): %d та.\nОбуна бўлганлар (жами): %d та.\nОбунани бекор қилганлар (жами): %d та.\nБир кунда ёзилган постлар (ўртача): %d та.\nБир кунда обуна бўлганлар (ўртача): %d та.",
-          stat.stat.total_posts,
-          stat.stat.total_subscribers,
-          stat.stat.total_unsubscribers,
-          stat.stat.avg_posts_per_day,
-          stat.stat.avg_subscribers_per_day);
+      message += util.format(
+        "Ёзилган постлар (жами): %d та.\nОбуна бўлганлар (жами): %d та.\nОбунани бекор қилганлар (жами): %d та.\nБир кунда ёзилган постлар (ўртача): %d та.\nБир кунда обуна бўлганлар (ўртача): %d та.",
+        stat.stat.total_posts,
+        stat.stat.total_subscribers,
+        stat.stat.total_unsubscribers,
+        stat.stat.avg_posts_per_day,
+        stat.stat.avg_subscribers_per_day);
       bot.sendMessage(user.id, message);
     });
 
@@ -163,7 +165,7 @@ bot.onText(/\/rating/, function(msg, match) {
   };
 
   pg.connect(postgres_url, function(err, client, done) {
-    if(err) {
+    if (err) {
       console.error('Cannot connect to Postgres (rating)');
       console.error(err);
       done();
@@ -176,24 +178,24 @@ bot.onText(/\/rating/, function(msg, match) {
       var message = "📊 Рейтинг\n\n";
       message += "Энг фаол иштирокчилар:\n";
       ratings.forEach(function(rating) {
-        rating.user_rating.forEach(function (user, i) {
+        rating.user_rating.forEach(function(user, i) {
           message += util.format(
-              "%d. %s (%s): %d\n",
-              i+1,
-              user.username,
-              user.screenname,
-              user.posts);
+            "%d. %s (%s): %d\n",
+            i + 1,
+            user.username,
+            user.screenname,
+            user.posts);
         });
       });
 
       message += "\nЭнг фаол ҳудудлар:\n";
       ratings.forEach(function(rating) {
-        rating.location_rating.forEach(function (location, i) {
+        rating.location_rating.forEach(function(location, i) {
           message += util.format(
-              "%d. %s: %d\n",
-              i+1,
-              location.location,
-              location.posts);
+            "%d. %s: %d\n",
+            i + 1,
+            location.location,
+            location.posts);
         });
       });
 
@@ -219,7 +221,9 @@ bot.onText(/\/about/, function(msg, match) {
 
 
 // Twitter stream
-var stream = twit.stream('statuses/filter', { track: hashtags });
+var stream = twit.stream('statuses/filter', {
+  track: hashtags
+});
 stream.on('connected', function(response) {
   console.info('Twitter client connected to stream');
 });
@@ -235,7 +239,7 @@ stream.on('tweet', function(obj) {
   };
 
   pg.connect(postgres_url, function(err, client, done) {
-    if(err) {
+    if (err) {
       console.error('Cannot connect to Postgres (subscribe)');
       console.error(err);
       done();
@@ -244,7 +248,7 @@ stream.on('tweet', function(obj) {
 
     saveTweet(client, tweet, function(ok) {
       done();
-      if(ok) {
+      if (ok) {
         console.info('Tweet', tweet.id, 'saved');
       } else {
         console.info('Cannot save tweet', tweet.id);
@@ -262,15 +266,15 @@ stream.on('tweet', function(obj) {
 var pgClient = new pg.Client(postgres_url);
 pgClient.connect(function(err) {
 
-  if(err) {
+  if (err) {
     console.error('Cannot connect to Postgres (pubsub)');
     console.error(err);
     process.exit(-1);
   }
-  
+
   pgClient.query('LISTEN channel', function(err, result) {
 
-    if(err) {
+    if (err) {
       console.error('Cannot listen to channel');
       process.exit(-1);
     }
@@ -293,7 +297,7 @@ function broadcastTweet(tweet) {
 
   pg.connect(postgres_url, function(err, client, done) {
 
-    if(err) {
+    if (err) {
       console.error('Cannot connect to Postgres (broadcast)');
       console.error(err);
       done();
@@ -303,13 +307,13 @@ function broadcastTweet(tweet) {
     console.info('Broadcasting tweet', tweet.id, 'to subscribers');
     getSubscribers(client, function(subscribers) {
       done();
-      subscribers.forEach(function (subscriber) {
+      subscribers.forEach(function(subscriber) {
         console.log('Sending to subscriber ->', subscriber.id);
         var message = util.format(
-            '%s (%s): %s',
-            tweet.username,
-            tweet.screenname,
-            tweet.text);
+          '%s (%s): %s',
+          tweet.username,
+          tweet.screenname,
+          tweet.text);
         try {
           bot.sendMessage(subscriber['id'], message);
         } catch (err) {
