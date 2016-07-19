@@ -19,7 +19,7 @@ io.sockets.on('connection', function(socket) {
 
   pg.connect(postgres_url, function(err, client, done) {
 
-    if(err) {
+    if (err) {
       console.error('Cannot connect to Postgres (subscribe)');
       console.error(err);
       done();
@@ -28,7 +28,7 @@ io.sockets.on('connection', function(socket) {
 
     getLastTweets(client, socket.id, function(lastTweets) {
       console.info('Sending last 10 tweets to user', socket.id);
-      lastTweets.forEach(function (tweet) {
+      lastTweets.forEach(function(tweet) {
         io.sockets.emit('tweet', tweet);
       });
     });
@@ -45,15 +45,15 @@ io.sockets.on('connection', function(socket) {
 var pgClient = new pg.Client(postgres_url);
 pgClient.connect(function(err) {
 
-  if(err) {
+  if (err) {
     console.error('Cannot connect to Postgres (pubsub)');
     console.error(err);
     process.exit(-1);
   }
-  
+
   pgClient.query('LISTEN channel', function(err, result) {
 
-    if(err) {
+    if (err) {
       console.error('Cannot listen to channel');
       process.exit(-1);
     }
