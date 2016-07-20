@@ -1,41 +1,39 @@
-// Main dependencies
 const util = require('util');
-var pg = require('pg').native;
-var twitter = require('twit');
-var TelegramBot = require('node-telegram-bot-api');
+const pg = require('pg').native;
+const twitter = require('twit');
+const TelegramBot = require('node-telegram-bot-api');
 
 // Environment variables
-var postgres_url = process.env.DATABASE_URL;
-var telegram_token = process.env.TELEGRAM_TOKEN;
-var hashtags = process.env.HASHTAGS || 'uzb25, mustaqillik, dilizhori';
+const postgres_url = process.env.DATABASE_URL;
+const telegram_token = process.env.TELEGRAM_TOKEN;
+const hashtags = process.env.HASHTAGS || 'uzb25, mustaqillik, dilizhori';
 
 // Instances
-var bot = new TelegramBot(
+let bot = new TelegramBot(
   telegram_token,
   {
     polling: true
   }
 );
 
-var twit = new twitter({
+let twit = new twitter({
   consumer_key: process.env.TWITTER_CONSUMER_KEY,
   consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
   access_token: process.env.TWITTER_ACCESS_TOKEN_KEY,
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-// API
-var subscribe = require('./lib/user/subscribe');
-var unsubscribe = require('./lib/user/unsubscribe');
-var getLastTweets = require('./lib/tweets/getlasttweets');
-var saveTweet = require('./lib/tweets/savetweet');
-var getSubscribers = require('./lib/user/getsubscribers');
-var getStat = require('./lib/stat/getstat');
-var getRating = require('./lib/stat/getrating');
+const subscribe = require('./lib/user/subscribe');
+const unsubscribe = require('./lib/user/unsubscribe');
+const getLastTweets = require('./lib/tweets/getlasttweets');
+const saveTweet = require('./lib/tweets/savetweet');
+const getSubscribers = require('./lib/user/getsubscribers');
+const getStat = require('./lib/stat/getstat');
+const getRating = require('./lib/stat/getrating');
 
 // Telegram command /start
-bot.onText(/\/start/, function(msg, match) {
-  var user = {
+bot.onText(/\/start/, (msg, match) => {
+  const user = {
     id: msg.from.id,
     username: msg.from.username,
     first_name: msg.from.first_name,
@@ -43,7 +41,7 @@ bot.onText(/\/start/, function(msg, match) {
     subscribed_at: new Date(msg.date * 1000)
   };
 
-  pg.connect(postgres_url, function(err, client, done) {
+  pg.connect(postgres_url, (err, client, done) => {
     if (err) {
       console.error('Cannot connect to Postgres (subscribe)');
       console.error(err);
@@ -51,22 +49,22 @@ bot.onText(/\/start/, function(msg, match) {
       process.exit(-1);
     }
 
-    subscribe(client, user, function(ok) {
+    subscribe(client, user, ok => {
       done();
       if (ok) {
         console.info('User', user.id, 'subscribed');
-        var message = 'Сиз обуна бўлдингиз. Обунани бекор қилиш учун исталган вақтда /stop буйруғини юборишингиз мумкин.';
+        const message = 'Сиз обуна бўлдингиз. Обунани бекор қилиш учун исталган вақтда /stop буйруғини юборишингиз мумкин.';
         bot.sendMessage(user.id, message);
       } else {
         console.info('Cannot subscribe user', user.id);
       }
     });
 
-    getLastTweets(client, user, function(lastTweets) {
+    getLastTweets(client, user, lastTweets => {
       done();
       console.info('Sending last 10 tweets to user', user.id);
-      lastTweets.forEach(function(tweet) {
-        var message = util.format(
+      lastTweets.forEach(tweet => {
+        const message = util.format(
           '%s (%s): %s',
           tweet.username,
           tweet.screenname,
@@ -80,12 +78,12 @@ bot.onText(/\/start/, function(msg, match) {
 });
 
 // Telegram command /stop
-bot.onText(/\/stop/, function(msg, match) {
-  var user = {
+bot.onText(/\/stop/, (msg, match) => {
+  const user = {
     id: msg.from.id,
   };
 
-  pg.connect(postgres_url, function(err, client, done) {
+  pg.connect(postgres_url, (err, client, done) => {
     if (err) {
       console.error('Cannot connect to Postgres (unsubscribe)');
       console.error(err);
@@ -93,11 +91,11 @@ bot.onText(/\/stop/, function(msg, match) {
       process.exit(-1);
     }
 
-    unsubscribe(client, user, function(ok) {
+    unsubscribe(client, user, ok => {
       done();
       if (ok) {
         console.info('User', user.id, 'unsubscribed');
-        var message = 'Обуна бекор қилинди. Қайта обуна бўлиш учун /start ни юборишингиз мумкин.';
+        const message = 'Обуна бекор қилинди. Қайта обуна бўлиш учун /start ни юборишингиз мумкин.';
         bot.sendMessage(user.id, message);
       } else {
         console.info('Cannot unsubscribe user', user.id);
@@ -110,13 +108,13 @@ bot.onText(/\/stop/, function(msg, match) {
 
 
 // Telegram command /info
-bot.onText(/\/info/, function(msg, match) {
+bot.onText(/\/info/, (msg, match) => {
 
-  var user = {
+  const user = {
     id: msg.from.id,
   };
 
-  var message = util.format(
+  const message = util.format(
     "Ушбу бот Twitter да ёзилаётган постларни бир жойда реал вақтда кўриш учун яратилди. Бот ҳозирда интернетда чоп этилаётган қуйидаги хештегларни доим кузатиб бормоқда.\n\n%s",
     hashtags);
   bot.sendMessage(user.id, message);
@@ -125,13 +123,13 @@ bot.onText(/\/info/, function(msg, match) {
 
 
 // Telegram command /stat
-bot.onText(/\/stat/, function(msg, match) {
+bot.onText(/\/stat/, (msg, match) => {
 
-  var user = {
+  const user = {
     id: msg.from.id,
   };
 
-  pg.connect(postgres_url, function(err, client, done) {
+  pg.connect(postgres_url, (err, client, done) => {
     if (err) {
       console.error('Cannot connect to Postgres (stat)');
       console.error(err);
@@ -139,9 +137,9 @@ bot.onText(/\/stat/, function(msg, match) {
       process.exit(-1);
     }
 
-    getStat(client, user, function(stat) {
+    getStat(client, user, stat => {
       done();
-      var message = "📈 Статистика\n\n";
+      let message = "📈 Статистика\n\n";
       message += util.format(
         "Ёзилган постлар (жами): %d та.\nОбуна бўлганлар (жами): %d та.\nОбунани бекор қилганлар (жами): %d та.\nБир кунда ёзилган постлар (ўртача): %d та.\nБир кунда обуна бўлганлар (ўртача): %d та.",
         stat.stat.total_posts,
@@ -158,13 +156,13 @@ bot.onText(/\/stat/, function(msg, match) {
 
 
 // Telegram command /rating
-bot.onText(/\/rating/, function(msg, match) {
+bot.onText(/\/rating/, (msg, match) => {
 
-  var user = {
+  const user = {
     id: msg.from.id,
   };
 
-  pg.connect(postgres_url, function(err, client, done) {
+  pg.connect(postgres_url, (err, client, done) => {
     if (err) {
       console.error('Cannot connect to Postgres (rating)');
       console.error(err);
@@ -172,13 +170,13 @@ bot.onText(/\/rating/, function(msg, match) {
       process.exit(-1);
     }
 
-    getRating(client, user, function(ratings) {
+    getRating(client, user, ratings => {
       done();
 
-      var message = "📊 Рейтинг\n\n";
+      let message = "📊 Рейтинг\n\n";
       message += "Энг фаол иштирокчилар:\n";
-      ratings.forEach(function(rating) {
-        rating.user_rating.forEach(function(user, i) {
+      ratings.forEach(rating => {
+        rating.user_rating.forEach((user, i) => {
           message += util.format(
             "%d. %s (%s): %d\n",
             i + 1,
@@ -189,8 +187,8 @@ bot.onText(/\/rating/, function(msg, match) {
       });
 
       message += "\nЭнг фаол ҳудудлар:\n";
-      ratings.forEach(function(rating) {
-        rating.location_rating.forEach(function(location, i) {
+      ratings.forEach(rating => {
+        rating.location_rating.forEach((location, i) => {
           message += util.format(
             "%d. %s: %d\n",
             i + 1,
@@ -208,27 +206,27 @@ bot.onText(/\/rating/, function(msg, match) {
 });
 
 // Telegram command /about
-bot.onText(/\/about/, function(msg, match) {
+bot.onText(/\/about/, (msg, match) => {
 
-  var user = {
+  const user = {
     id: msg.from.id,
   };
 
-  var message = "Муаллифлар: @crispybone, @Akhmatovich\nЛойиҳа коди: https://github.com/muminoff/uzb25bot";
+  const message = "Муаллифлар: @crispybone, @Akhmatovich\nЛойиҳа коди: https://github.com/muminoff/uzb25bot";
   bot.sendMessage(user.id, message);
 
 });
 
 
 // Twitter stream
-var stream = twit.stream('statuses/filter', {
+const stream = twit.stream('statuses/filter', {
   track: hashtags
 });
-stream.on('connected', function(response) {
+stream.on('connected', response => {
   console.info('Twitter client connected to stream');
 });
-stream.on('tweet', function(obj) {
-  var tweet = {
+stream.on('tweet', obj => {
+  const tweet = {
     id: obj.id,
     text: obj.text,
     username: obj.user.name,
@@ -238,7 +236,7 @@ stream.on('tweet', function(obj) {
     created_at: new Date(obj.created_at)
   };
 
-  pg.connect(postgres_url, function(err, client, done) {
+  pg.connect(postgres_url, (err, client, done) => {
     if (err) {
       console.error('Cannot connect to Postgres (subscribe)');
       console.error(err);
@@ -246,7 +244,7 @@ stream.on('tweet', function(obj) {
       process.exit(-1);
     }
 
-    saveTweet(client, tweet, function(ok) {
+    saveTweet(client, tweet, ok => {
       done();
       if (ok) {
         console.info('Tweet', tweet.id, 'saved');
@@ -263,8 +261,8 @@ stream.on('tweet', function(obj) {
 
 
 // Postgres channel listener
-var pgClient = new pg.Client(postgres_url);
-pgClient.connect(function(err) {
+const pgClient = new pg.Client(postgres_url);
+pgClient.connect(err => {
 
   if (err) {
     console.error('Cannot connect to Postgres (pubsub)');
@@ -272,7 +270,7 @@ pgClient.connect(function(err) {
     process.exit(-1);
   }
 
-  pgClient.query('LISTEN channel', function(err, result) {
+  pgClient.query('LISTEN channel', (err, result) => {
 
     if (err) {
       console.error('Cannot listen to channel');
@@ -283,9 +281,9 @@ pgClient.connect(function(err) {
 
   });
 
-  pgClient.on('notification', function(data) {
+  pgClient.on('notification', data => {
 
-    var tweetData = JSON.parse(data.payload);
+    const tweetData = JSON.parse(data.payload);
     console.log('Got tweet', tweetData.id, 'now broadcasting');
     broadcastTweet(tweetData);
 
@@ -295,7 +293,7 @@ pgClient.connect(function(err) {
 
 function broadcastTweet(tweet) {
 
-  pg.connect(postgres_url, function(err, client, done) {
+  pg.connect(postgres_url, (err, client, done) => {
 
     if (err) {
       console.error('Cannot connect to Postgres (broadcast)');
@@ -305,11 +303,11 @@ function broadcastTweet(tweet) {
     }
 
     console.info('Broadcasting tweet', tweet.id, 'to subscribers');
-    getSubscribers(client, function(subscribers) {
+    getSubscribers(client, subscribers => {
       done();
-      subscribers.forEach(function(subscriber) {
+      subscribers.forEach(subscriber => {
         console.log('Sending to subscriber ->', subscriber.id);
-        var message = util.format(
+        const message = util.format(
           '%s (%s): %s',
           tweet.username,
           tweet.screenname,
