@@ -3,9 +3,6 @@
 
 Телеграм бот: [@Uzb25Bot](https://telegram.me/Uzb25Bot)
 
-![alt text](./screenshots/screen1.jpg "Screenshot")
-![alt text](./screenshots/screen2.jpg "Screenshot")
-
 # Ўрнатиш тартиби
 Ушбу буйруқларни кетма-кетликда ишга туширинг.
 
@@ -24,6 +21,10 @@
 13. `export TWITTER_ACCESS_TOKEN_KEY="__twitter_access_token_key__"`
 14. `export TWITTER_ACCESS_TOKEN_SECRET="__twitter_access_token_secret__"`
 15. `npm start`
+
+# Screenshot
+![alt text](./screenshots/screen1.jpg "Screenshot")
+![alt text](./screenshots/screen2.jpg "Screenshot")
 
 # Лицензия
 MIT
