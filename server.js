@@ -24,6 +24,7 @@ io.sockets.on('connection', socket => {
     }
 
     getLastTweets(client, socket.id, lastTweets => {
+      done();
       console.info('Sending last 10 tweets to user', socket.id);
       lastTweets.forEach(tweet => {
         io.sockets.emit('tweet', tweet);
