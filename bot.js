@@ -1,3 +1,4 @@
+// Main modules
 const util = require('util');
 const pg = require('pg').native;
 const twitter = require('twit');
@@ -23,6 +24,7 @@ let twit = new twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
+// API
 const subscribe = require('./lib/user/subscribe');
 const unsubscribe = require('./lib/user/unsubscribe');
 const getLastTweets = require('./lib/tweets/getlasttweets');

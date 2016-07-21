@@ -1,4 +1,4 @@
-// main modules
+// Main modules
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
@@ -8,6 +8,9 @@ const pg = require('pg').native;
 
 // Environment variables
 const postgres_url = process.env.DATABASE_URL;
+
+// API
+const getLastTweets = require('./lib/tweets/getlasttweets');
 
 io.sockets.on('connection', socket => {
   remote_addr = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
