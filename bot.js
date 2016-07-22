@@ -24,8 +24,7 @@ let twit = new twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-// API
-const pg = require('pg').native;
+const logger = require('./logger');
 const twitter = require('twit');
 const TelegramBot = require('node-telegram-bot-api');
 
