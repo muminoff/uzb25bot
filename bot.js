@@ -86,7 +86,7 @@ bot.onText(/\/start/, (msg) => {
     saveEvent(client, logger, metrics, ok => {
       done();
       if (ok) {
-        logger.info('User', user.id, 'tracked.');
+        logger.info('User', user.id, 'tracked');
       } else {
         logger.error('Cannot track user', user.id);
       }
@@ -129,7 +129,7 @@ bot.onText(/\/stop/, (msg) => {
     saveEvent(client, logger, metrics, ok => {
       done();
       if (ok) {
-        logger.info('User', user.id, 'tracked.');
+        logger.info('User', user.id, 'tracked');
       } else {
         logger.error('Cannot track user', user.id);
       }
@@ -190,7 +190,7 @@ bot.onText(/\/stat/, (msg) => {
     saveEvent(client, logger, metrics, ok => {
       done();
       if (ok) {
-        logger.info('User', user.id, 'tracked.');
+        logger.info('User', user.id, 'tracked');
       } else {
         logger.error('Cannot track user', user.id);
       }
@@ -254,7 +254,7 @@ bot.onText(/\/rating/, (msg) => {
     saveEvent(client, logger, metrics, ok => {
       done();
       if (ok) {
-        logger.info('User', user.id, 'tracked.');
+        logger.info('User', user.id, 'tracked');
       } else {
         logger.error('Cannot track user', user.id);
       }
