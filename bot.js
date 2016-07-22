@@ -85,7 +85,7 @@ bot.onText(/\/start/, (msg) => {
       if (ok) {
         logger.info('User', user.id, 'tracked.');
       } else {
-        logger.info('Cannot track user', user.id);
+        logger.error('Cannot track user', user.id);
       }
     });
 
