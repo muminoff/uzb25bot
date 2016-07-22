@@ -24,30 +24,6 @@ let twit = new twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-const logger = require('./logger');
-const twitter = require('twit');
-const TelegramBot = require('node-telegram-bot-api');
-
-// Environment variables
-const postgres_url = process.env.DATABASE_URL;
-const telegram_token = process.env.TELEGRAM_TOKEN;
-const hashtags = process.env.HASHTAGS || 'uzb25, mustaqillik, dilizhori';
-
-// Instances
-let bot = new TelegramBot(
-    telegram_token,
-    {
-      polling: true
-    }
-    );
-
-let twit = new twitter({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  access_token: process.env.TWITTER_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-});
-
 // API
 const logger = require('./logger');
 const subscribe = require('./lib/user/subscribe');
