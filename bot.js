@@ -79,7 +79,7 @@ bot.onText(/\/start/, (msg) => {
       });
     });
 
-    const metrics = { user_id: user.id, command: '/start' };
+    const metrics = { user_id: user.id.toString(), command: '/start' };
     saveEvent(client, logger, metrics, ok => {
       done();
       if (ok==true) {
