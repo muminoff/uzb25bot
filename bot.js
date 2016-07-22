@@ -185,7 +185,7 @@ bot.onText(/\/stat/, (msg) => {
 
     const metrics = {
       user_id: user.id,
-      command: "/info"
+      command: "/stat"
     };
     saveEvent(client, logger, metrics, ok => {
       done();
