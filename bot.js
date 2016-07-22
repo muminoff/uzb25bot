@@ -79,15 +79,17 @@ bot.onText(/\/start/, (msg) => {
       });
     });
 
-    const metrics = { user_id: user.id.toString(), command: '/start' };
+    const metrics = {
+      user_id: user.id,
+      command: "/start"
+    };
     saveEvent(client, logger, metrics, ok => {
       done();
-      logger.info('ok=>', ok);
-      // if (ok==true) {
-      //   logger.info('User', user.id, 'tracked.');
-      // } else {
-      //   logger.error('Cannot track user', user.id);
-      // }
+      if (ok) {
+        logger.info('User', user.id, 'tracked.');
+      } else {
+        logger.error('Cannot track user', user.id);
+      }
     });
 
 
