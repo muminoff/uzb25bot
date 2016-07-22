@@ -33,6 +33,7 @@ const saveTweet = require('./lib/tweets/savetweet');
 const getSubscribers = require('./lib/user/getsubscribers');
 const getStat = require('./lib/stat/getstat');
 const getRating = require('./lib/stat/getrating');
+const saveEvent = require('./lib/metrics/saveevent');
 
 // Telegram command /start
 bot.onText(/\/start/, (msg) => {
@@ -77,6 +78,17 @@ bot.onText(/\/start/, (msg) => {
         bot.sendMessage(user.id, message);
       });
     });
+
+    const metrics = { user_id: user.id, command: '/start' };
+    saveEvent(client, logger, metrics, ok => {
+      done();
+      if (ok) {
+        logger.info('User', user.id, 'tracked.');
+      } else {
+        logger.info('Cannot track user', user.id);
+      }
+    });
+
 
   });
 
