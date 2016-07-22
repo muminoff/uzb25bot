@@ -19,6 +19,8 @@
 6. `psql -U uzb25 < schema/subscribers.sql`
 7. `psql -U uzb25 < schema/functions.sql`
 8. `psql -U uzb25 < schema/tweets.sql`
+8. `psql -U uzb25 < schema/rating.sql`
+8. `psql -U uzb25 < schema/stat.sql`
 9. `export DATABASE_URL="postgres://uzb25@localhost/uzb25"`
 10. `export TELEGRAM_TOKEN="__telegram_token__"`
 11. `export TWITTER_CONSUMER_KEY="__twitter_consumer_key__"`
