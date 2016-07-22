@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://telegram.me/Uzb25Bot"><img src="http://emojipedia-us.s3.amazonaws.com/cache/48/0b/480b760894603a76ac032c97188a2737.png" /></a>
+  <a href="https://telegram.me/Uzb25Bot" target="_blank"><img src="http://emojipedia-us.s3.amazonaws.com/cache/48/0b/480b760894603a76ac032c97188a2737.png" /></a>
   <br>
 </p>
 <br>
