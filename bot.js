@@ -122,6 +122,19 @@ bot.onText(/\/stop/, (msg) => {
       }
     });
 
+    const metrics = {
+      user_id: user.id,
+      command: "/stop"
+    };
+    saveEvent(client, logger, metrics, ok => {
+      done();
+      if (ok) {
+        logger.info('User', user.id, 'tracked.');
+      } else {
+        logger.error('Cannot track user', user.id);
+      }
+    });
+
   });
 
 });
@@ -168,6 +181,19 @@ bot.onText(/\/stat/, (msg) => {
           stat.stat.avg_posts_per_day,
           stat.stat.avg_subscribers_per_day);
       bot.sendMessage(user.id, message);
+    });
+
+    const metrics = {
+      user_id: user.id,
+      command: "/info"
+    };
+    saveEvent(client, logger, metrics, ok => {
+      done();
+      if (ok) {
+        logger.info('User', user.id, 'tracked.');
+      } else {
+        logger.error('Cannot track user', user.id);
+      }
     });
 
   });
@@ -219,6 +245,19 @@ bot.onText(/\/rating/, (msg) => {
 
       bot.sendMessage(user.id, message);
 
+    });
+
+    const metrics = {
+      user_id: user.id,
+      command: "/rating"
+    };
+    saveEvent(client, logger, metrics, ok => {
+      done();
+      if (ok) {
+        logger.info('User', user.id, 'tracked.');
+      } else {
+        logger.error('Cannot track user', user.id);
+      }
     });
 
   });
