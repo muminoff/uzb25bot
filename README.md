@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://telegram.me/Uzb25Bot"><img src="" /></a>
+  <a href="https://telegram.me/Uzb25Bot"><img src="//web.telegram.org/temporary/851419996_137441_15420202313423202373.jpg" /></a>
   <br>
 </p>
 <br>
