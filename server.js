@@ -27,7 +27,7 @@ io.sockets.on('connection', socket => {
       process.exit(-1);
     }
 
-    getLastTweets(client, socket.id, lastTweets => {
+    getLastTweets(client, logger, socket.id, lastTweets => {
       done();
       logger.info('Sending last 10 tweets to user', socket.id);
       lastTweets.forEach(tweet => {
