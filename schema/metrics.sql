@@ -6,7 +6,9 @@ CREATE TABLE metrics (
     events jsonb
 );
 
-/* Necessary indexes for speed up the queries */
+/* Necessary indexes for speed up queries */
+CREATE INDEX metrics_user on metrics ((events->>'user'));
+CREATE INDEX metrics_command on metrics ((events->>'command'));
 
 /* Silly usage with upsert */
 /* Uncomment and copy paste below command */
