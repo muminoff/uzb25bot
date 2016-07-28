@@ -3,6 +3,7 @@ const util = require('util');
 const pg = require('pg').native;
 const twitter = require('twit');
 const TelegramBot = require('node-telegram-bot-api');
+const keenIO = require('keen.io');
 
 // Environment variables
 const postgres_url = process.env.DATABASE_URL;
@@ -22,6 +23,10 @@ let twit = new twitter({
   consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
   access_token: process.env.TWITTER_ACCESS_TOKEN_KEY,
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+});
+let keen = keenIO.configure({
+  projectId: process.env.KEEN_PROJECT_ID,
+  writeKey: process.env.KEEN_WRITE_KEY
 });
 
 // API
@@ -47,7 +52,6 @@ bot.onText(/\/start/, (msg) => {
   pg.connect(postgres_url, (err, client, done) => {
 
     if (err) {
-      /*eslint no-logger: ["error", { allow: ["warn", "error"] }] */
       logger.error('Cannot connect to Postgres (subscribe)');
       logger.error(err);
       done();
@@ -60,6 +64,16 @@ bot.onText(/\/start/, (msg) => {
         logger.info('User', user.id, 'subscribed');
         const message = 'Сиз обуна бўлдингиз. Обунани бекор қилиш учун исталган вақтда /stop буйруғини юборишингиз мумкин.';
         bot.sendMessage(user.id, message);
+
+        // Analytics
+        keen.addEvent("subscribe", user, function(err, res) {
+          if(err) {
+            logger.error('Cannot track user', user.id);
+          } else {
+            logger.info('User', user.id, 'tracked');
+          }
+        });
+
       } else {
         logger.info('Cannot subscribe user', user.id);
       }
@@ -105,6 +119,15 @@ bot.onText(/\/stop/, (msg) => {
       } else {
         logger.info('Cannot unsubscribe user', user.id);
       }
+
+        // Analytics
+        keen.addEvent("unsubscribe", user, function(err, res) {
+          if(err) {
+            logger.error('Cannot track user', user.id);
+          } else {
+            logger.info('User', user.id, 'tracked');
+          }
+        });
     });
 
   });
@@ -123,6 +146,15 @@ bot.onText(/\/info/, (msg) => {
       'Ушбу бот Twitter да ёзилаётган постларни бир жойда реал вақтда кўриш учун яратилди. Бот ҳозирда интернетда чоп этилаётган қуйидаги хештегларни доим кузатиб бормоқда.\n\n%s',
       hashtags);
   bot.sendMessage(user.id, message);
+
+  // Analytics
+  keen.addEvent("info", user, function(err, res) {
+    if(err) {
+      logger.error('Cannot track user', user.id);
+    } else {
+      logger.info('User', user.id, 'tracked');
+    }
+  });
 
 });
 
@@ -153,6 +185,16 @@ bot.onText(/\/stat/, (msg) => {
           stat.stat.avg_posts_per_day,
           stat.stat.avg_subscribers_per_day);
       bot.sendMessage(user.id, message);
+
+      // Analytics
+      keen.addEvent("stat", user, function(err, res) {
+        if(err) {
+          logger.error('Cannot track user', user.id);
+        } else {
+          logger.info('User', user.id, 'tracked');
+        }
+      });
+
     });
 
   });
@@ -204,6 +246,15 @@ bot.onText(/\/rating/, (msg) => {
 
       bot.sendMessage(user.id, message);
 
+      // Analytics
+      keen.addEvent("rating", user, function(err, res) {
+        if(err) {
+          logger.error('Cannot track user', user.id);
+        } else {
+          logger.info('User', user.id, 'tracked');
+        }
+      });
+
     });
 
   });
@@ -219,6 +270,15 @@ bot.onText(/\/about/, (msg) => {
 
   const message = 'Муаллифлар: @crispybone, @Akhmatovich\nЛойиҳа коди: https://github.com/muminoff/uzb25bot';
   bot.sendMessage(user.id, message);
+
+  // Analytics
+  keen.addEvent("about", user, function(err, res) {
+    if(err) {
+      logger.error('Cannot track user', user.id);
+    } else {
+      logger.info('User', user.id, 'tracked');
+    }
+  });
 
 });
 
