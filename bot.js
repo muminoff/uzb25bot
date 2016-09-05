@@ -388,3 +388,28 @@ function broadcastTweet(tweet) {
   });
 
 }
+
+pg.connect(postgres_url, (err, client, done) => {
+
+  if (err) {
+    logger.error('Cannot connect to Postgres (broadcast)');
+    logger.error(err);
+    done();
+    process.exit(-1);
+  }
+
+  logger.info('Broadcasting farewell to subscribers ...');
+  getSubscribers(client, logger, subscribers => {
+    done();
+    subscribers.forEach(subscriber => {
+      logger.warn('Sending to subscriber ->', subscriber.id);
+      const farewell = 'Ассалому алайкум.\n\nБотнинг фаолияти ўз якунига етди.\nҚизиқиш билдирганингиз учун раҳмат.\nУшбу лойиҳа очиқ-кодли бўлганлиги сабабли, бот томонидан шу пайтга қадар йиғилган маълумотларни қуйидаги линк орқали юклаб олишингиз мумкин.\n\nhttps://git.io/viGvf\n\nРаҳмат.';
+      try {
+        bot.sendMessage(subscriber['id'], farewell);
+      } catch (err) {
+        logger.error(err);
+      }
+    });
+  });
+
+});
